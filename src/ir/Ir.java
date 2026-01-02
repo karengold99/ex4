@@ -6,6 +6,9 @@ package ir;
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
+import java.util.ArrayList;
+import java.util.List;
+import java.io.PrintWriter;
 
 /*******************/
 /* PROJECT IMPORTS */
@@ -38,6 +41,45 @@ public class Ir
 			}
 			it.tail = new IrCommandList(cmd,null);
 		}
+	}
+
+	/********************************/
+	/* Get all commands as a List   */
+	/********************************/
+	public List<IrCommand> getAllCommands()
+	{
+		List<IrCommand> result = new ArrayList<>();
+		if (head != null) result.add(head);
+		IrCommandList curr = tail;
+		while (curr != null)
+		{
+			result.add(curr.head);
+			curr = curr.tail;
+		}
+		return result;
+	}
+
+	/********************************/
+	/* Print all IR to writer       */
+	/********************************/
+	public void printIR(PrintWriter writer)
+	{
+		if (head != null) writer.println(head.toString());
+		IrCommandList curr = tail;
+		while (curr != null)
+		{
+			writer.println(curr.head.toString());
+			curr = curr.tail;
+		}
+	}
+
+	/********************************/
+	/* Reset for testing            */
+	/********************************/
+	public void clear()
+	{
+		head = null;
+		tail = null;
 	}
 
 	/**************************************/
