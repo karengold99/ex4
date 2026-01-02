@@ -2,6 +2,9 @@ import java.io.*;
 import java.io.PrintWriter;
 import java_cup.runtime.Symbol;
 import ast.*;
+import cfg.*;
+import ir.*;
+import java.util.List;
 
 public class Main
 {
@@ -36,7 +39,7 @@ public class Main
 			/*******************************/
 			/* [4] Initialize a new parser */
 			/*******************************/
-			p = new Parser(l);
+			p = new Parser(l, fileWriter);
 
 			/***********************************/
 			/* [5] 3 ... 2 ... 1 ... Parse !!! */
@@ -57,6 +60,41 @@ public class Main
 			/* [8] IR the AST ... */
 			/**********************/
 			ast.irMe();
+
+			/*************************************/
+			/* [8.5] Optional: Print IR for debug */
+			/*************************************/
+			if (System.getenv("DEBUG_IR") != null) {
+				try {
+					PrintWriter irWriter = new PrintWriter("ir_debug.txt");
+					Ir.getInstance().printIR(irWriter);
+					irWriter.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			/*************************************/
+			/* [8.6] Build Control Flow Graph    */
+			/*************************************/
+			List<IrCommand> irList = Ir.getInstance().getAllCommands();
+			ControlFlowGraph cfg = ControlFlowGraph.build(irList);
+			
+			/*************************************/
+			/* [8.7] Optional: Print CFG for debug */
+			/*************************************/
+			if (System.getenv("DEBUG_CFG") != null) {
+				cfg.printCFG();
+				
+				// Also save DOT format
+				try {
+					PrintWriter dotWriter = new PrintWriter("cfg_debug.dot");
+					dotWriter.print(cfg.toDot());
+					dotWriter.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 
 			/**************************/
 			/* [9] Close output file */
