@@ -19,4 +19,12 @@ public class IrCommandJumpLabel extends IrCommand
 	{
 		this.labelName = labelName;
 	}
+	
+	public String getLabelName() { return labelName; }
+	
+	@Override
+	public String toString()
+	{
+		return String.format("goto %s", labelName);
+	}
 }
