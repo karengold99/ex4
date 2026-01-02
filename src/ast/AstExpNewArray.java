@@ -14,7 +14,6 @@ public class AstExpNewArray extends AstExp
 	public AstExpNewArray(String typeName, AstExp size)
 	{
 		serialNumber = AstNodeSerialNumber.getFresh();
-		// System.out.format("====================== exp -> NEW %s[ exp ]\n", typeName);
 		this.typeName = typeName;
 		this.size = size;
 	}
