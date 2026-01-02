@@ -8,6 +8,7 @@ package ast;
 /*******************/
 import types.*;
 import symboltable.*;
+import semantic.SemanticException;
 
 public class AstTypeName extends AstNode
 {
@@ -27,6 +28,7 @@ public class AstTypeName extends AstNode
 		/******************************/
 		serialNumber = AstNodeSerialNumber.getFresh();
 	
+		// System.out.format("====================== typeName -> %s %s\n", type, name);
 		this.type = type;
 		this.name = name;
 	}
@@ -49,24 +51,20 @@ public class AstTypeName extends AstNode
 			String.format("NAME:TYPE\n%s:%s",name,type));
 	}
 
-	public Type semantMe()
+	@Override
+	public Type semantMe() throws SemanticException
 	{
 		Type t = SymbolTable.getInstance().find(type);
 		if (t == null)
-		{
-			/**************************/
-			/* ERROR: undeclared type */
-			/**************************/
-			System.exit(0);
-			return null;
-		}
-		else
-		{
-			/*******************************************************/
-			/* Enter var with name=name and type=t to symbol table */
-			/*******************************************************/
-			SymbolTable.getInstance().enter(name,t);
-		}
+			throw new SemanticException(lineNumber, "type '" + type + "' does not exist");
+
+		if (t.isVoid())
+			throw new SemanticException(lineNumber, "parameter/field cannot have void type");
+
+		/*******************************************************/
+		/* Enter var with name=name and type=t to symbol table */
+		/*******************************************************/
+		SymbolTable.getInstance().enter(name, t);
 
 		/****************************/
 		/* return (existing) type t */
