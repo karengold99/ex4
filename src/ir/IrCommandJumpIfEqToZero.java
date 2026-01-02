@@ -22,4 +22,13 @@ public class IrCommandJumpIfEqToZero extends IrCommand
 		this.t          = t;
 		this.labelName = labelName;
 	}
+	
+	public Temp getTemp() { return t; }
+	public String getLabelName() { return labelName; }
+	
+	@Override
+	public String toString()
+	{
+		return String.format("if Temp_%d == 0 goto %s", t.getSerialNumber(), labelName);
+	}
 }
