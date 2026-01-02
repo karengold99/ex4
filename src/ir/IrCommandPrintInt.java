@@ -20,4 +20,12 @@ public class IrCommandPrintInt extends IrCommand
 	{
 		this.t = t;
 	}
+	
+	public Temp getTemp() { return t; }
+	
+	@Override
+	public String toString()
+	{
+		return String.format("PrintInt(Temp_%d)", t.getSerialNumber());
+	}
 }
