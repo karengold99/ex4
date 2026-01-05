@@ -26,7 +26,7 @@ public class SymbolTable
 		SymbolTableEntry e = new SymbolTableEntry(name, t, hashValue, next, curScopeDepth, top, topIndex++);
 		top = e;
 		table[hashValue] = e;
-		printMe();
+		// printMe();
 	}
 
 	public Type find(String name)
@@ -70,7 +70,7 @@ public class SymbolTable
 	{
 		enter("SCOPE-BOUNDARY", TypeForScopeBoundaries.getInstance());
 		curScopeDepth++;
-		printMe();
+		// printMe();
 	}
 
 	public void endScope()
@@ -84,7 +84,7 @@ public class SymbolTable
 		topIndex--;
 		top = top.prevtop;
 		curScopeDepth--;
-		printMe();
+		// printMe();
 	}
 
 	public boolean isGlobalScope() { return curScopeDepth == 0; }
@@ -134,26 +134,28 @@ public class SymbolTable
 		String filename=String.format("SYMBOL_TABLE_%d_IN_GRAPHVIZ_DOT_FORMAT.txt",n++);
 		try {
 			PrintWriter fileWriter = new PrintWriter(dirname+filename);
-			fileWriter.print("digraph structs {\nrankdir = LR\nnode [shape=record];\n");
-			fileWriter.print("hashTable [label=\"");
-			for (int i=0;i<hashArraySize-1;i++) fileWriter.format("<f%d>\n%d\n|",i,i);
-			fileWriter.format("<f%d>\n%d\n\"];\n",hashArraySize-1,hashArraySize-1);
-			for (int i=0;i<hashArraySize;i++) {
-				if (table[i] != null)
-					fileWriter.format("hashTable:f%d -> node_%d_0:f0;\n",i,i);
-				int j=0;
-				for (SymbolTableEntry it = table[i]; it!=null; it=it.next) {
-					fileWriter.format("node_%d_%d [label=\"<f0>%s|<f1>%s|<f2>prevtop=%d|<f3>next\"];\n",
-						i,j,it.name,it.type.name,it.prevtopIndex);
-					if (it.next != null) {
-						fileWriter.format("node_%d_%d -> node_%d_%d [style=invis,weight=10];\n",i,j,i,j+1);
-						fileWriter.format("node_%d_%d:f3 -> node_%d_%d:f0;\n",i,j,i,j+1);
+			if (fileWriter != null) {
+				fileWriter.print("digraph structs {\nrankdir = LR\nnode [shape=record];\n");
+				fileWriter.print("hashTable [label=\"");
+				for (int i=0;i<hashArraySize-1;i++) fileWriter.format("<f%d>\n%d\n|",i,i);
+				fileWriter.format("<f%d>\n%d\n\"];\n",hashArraySize-1,hashArraySize-1);
+				for (int i=0;i<hashArraySize;i++) {
+					if (table[i] != null)
+						fileWriter.format("hashTable:f%d -> node_%d_0:f0;\n",i,i);
+					int j=0;
+					for (SymbolTableEntry it = table[i]; it!=null; it=it.next) {
+						fileWriter.format("node_%d_%d [label=\"<f0>%s|<f1>%s|<f2>prevtop=%d|<f3>next\"];\n",
+							i,j,it.name,it.type.name,it.prevtopIndex);
+						if (it.next != null) {
+							fileWriter.format("node_%d_%d -> node_%d_%d [style=invis,weight=10];\n",i,j,i,j+1);
+							fileWriter.format("node_%d_%d:f3 -> node_%d_%d:f0;\n",i,j,i,j+1);
+						}
+						j++;
 					}
-					j++;
 				}
+				fileWriter.print("}\n");
+				fileWriter.close();
 			}
-			fileWriter.print("}\n");
-			fileWriter.close();
 		} catch (Exception e) { e.printStackTrace(); }
 	}
 	
