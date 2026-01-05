@@ -49,7 +49,7 @@ public class Main
 			/*************************/
 			/* [6] Print the AST ... */
 			/*************************/
-			ast.printMe();
+			// ast.printMe();
 
 			/**************************/
 			/* [7] Semant the AST ... */
@@ -93,6 +93,20 @@ public class Main
 					dotWriter.close();
 				} catch (Exception e) {
 					e.printStackTrace();
+				}
+			}
+
+			/*************************************/
+			/* [8.8] Data Flow Analysis          */
+			/*************************************/
+			dfa.UninitializedAnalyzer analyzer = new dfa.UninitializedAnalyzer(cfg);
+			java.util.Set<String> uninitialized = analyzer.analyze();
+
+			if (uninitialized.isEmpty()) {
+				fileWriter.println("!OK");
+			} else {
+				for (String var : uninitialized) {
+					fileWriter.println(var);
 				}
 			}
 
