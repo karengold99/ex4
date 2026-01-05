@@ -103,11 +103,9 @@ public class Main
 			java.util.Set<String> uninitialized = analyzer.analyze();
 
 			if (uninitialized.isEmpty()) {
-				fileWriter.println("!OK");
+				fileWriter.print("!OK");
 			} else {
-				for (String var : uninitialized) {
-					fileWriter.println(var);
-				}
+				fileWriter.print(String.join("\n", uninitialized));
 			}
 
 			/**************************/
