@@ -85,13 +85,6 @@ public class AstExpCall extends AstExp
 	@Override
 	public Temp irMe()
 	{
-		// Generate IR for all arguments first
-		AstExpList currArg = args;
-		while (currArg != null) {
-			currArg.head.irMe();
-			currArg = currArg.tail;
-		}
-		
 		// Handle PrintInt specially (library function)
 		if (funcName.equals("PrintInt")) {
 			// Get the first argument temp
@@ -100,6 +93,13 @@ public class AstExpCall extends AstExp
 				Ir.getInstance().AddIrCommand(new IrCommandPrintInt(argTemp));
 			}
 			return null;  // PrintInt returns void
+		}
+
+		// Generate IR for all arguments first
+		AstExpList currArg = args;
+		while (currArg != null) {
+			currArg.head.irMe();
+			currArg = currArg.tail;
 		}
 		
 		// For other functions, we would emit a call instruction

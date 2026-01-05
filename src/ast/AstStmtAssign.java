@@ -83,8 +83,7 @@ public class AstStmtAssign extends AstStmt
 		if (var instanceof AstExpVarSimple) {
 			// Simple assignment: x := exp
 			AstExpVarSimple simpleVar = (AstExpVarSimple) var;
-			// For now, use variable name directly (we'll refine offset handling later)
-			Ir.getInstance().AddIrCommand(new IrCommandStore(simpleVar.name, rhsTemp));
+			Ir.getInstance().AddIrCommand(new IrCommandStore(simpleVar.getUniqueName(), rhsTemp));
 		}
 		else if (var instanceof AstExpVarSubscript) {
 			// Array assignment: a[i] := exp

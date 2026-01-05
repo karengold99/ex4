@@ -18,6 +18,14 @@ public class AstExpVarSimple extends AstExpVar
 	/*****************************************************/
 	private SymbolTableEntry entry;
 	
+	public String getUniqueName()
+	{
+		if (entry != null) {
+			return name + "_" + entry.getOffset();
+		}
+		return name;
+	}
+
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
@@ -65,12 +73,7 @@ public class AstExpVarSimple extends AstExpVar
 	public Temp irMe()
 	{
 		Temp t = TempFactory.getInstance().getFreshTemp();
-		// Use saved entry from semantic analysis (if available)
-		String uniqueName = name;
-		if (entry != null) {
-			uniqueName = name + "_" + entry.getOffset();
-		}
-		Ir.getInstance().AddIrCommand(new IrCommandLoad(t, uniqueName));
+		Ir.getInstance().AddIrCommand(new IrCommandLoad(t, getUniqueName()));
 		return t;
 	}
 }

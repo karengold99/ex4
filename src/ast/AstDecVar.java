@@ -19,6 +19,13 @@ public class AstDecVar extends AstDec {
 	/*****************************************************/
 	private SymbolTableEntry entry;
 
+	public String getUniqueName() {
+		if (entry != null) {
+			return name + "_" + entry.getOffset();
+		}
+		return name;
+	}
+
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
@@ -101,12 +108,7 @@ public class AstDecVar extends AstDec {
 		// Only generate IR if variable has initializer
 		if (initialValue != null) {
 			Temp initTemp = initialValue.irMe();
-			// Use saved entry from semantic analysis (if available)
-			String uniqueName = name;
-			if (entry != null) {
-				uniqueName = name + "_" + entry.getOffset();
-			}
-			Ir.getInstance().AddIrCommand(new IrCommandStore(uniqueName, initTemp));
+			Ir.getInstance().AddIrCommand(new IrCommandStore(getUniqueName(), initTemp));
 		}
 		// No initializer → variable stays uninitialized (important for dataflow analysis!)
 		return null;
