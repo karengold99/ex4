@@ -46,58 +46,24 @@ public class Main
 			/***********************************/
 			ast = (AstDecList) p.parse().value;
 
-			/*************************/
-			/* [6] Print the AST ... */
-			/*************************/
-			// ast.printMe();
-
 			/**************************/
-			/* [7] Semant the AST ... */
+			/* [6] Semant the AST ... */
 			/**************************/
 			ast.semantMe();
 
 			/**********************/
-			/* [8] IR the AST ... */
+			/* [7] IR the AST ... */
 			/**********************/
 			ast.irMe();
 
 			/*************************************/
-			/* [8.5] Optional: Print IR for debug */
-			/*************************************/
-			if (System.getenv("DEBUG_IR") != null) {
-				try {
-					PrintWriter irWriter = new PrintWriter("ir_debug.txt");
-					Ir.getInstance().printIR(irWriter);
-					irWriter.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-
-			/*************************************/
-			/* [8.6] Build Control Flow Graph    */
+			/* [8] Build Control Flow Graph    */
 			/*************************************/
 			List<IrCommand> irList = Ir.getInstance().getAllCommands();
 			ControlFlowGraph cfg = ControlFlowGraph.build(irList);
 			
 			/*************************************/
-			/* [8.7] Optional: Print CFG for debug */
-			/*************************************/
-			if (System.getenv("DEBUG_CFG") != null) {
-				cfg.printCFG();
-				
-				// Also save DOT format
-				try {
-					PrintWriter dotWriter = new PrintWriter("cfg_debug.dot");
-					dotWriter.print(cfg.toDot());
-					dotWriter.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-
-			/*************************************/
-			/* [8.8] Data Flow Analysis          */
+			/* [9] Data Flow Analysis          */
 			/*************************************/
 			dfa.UninitializedAnalyzer analyzer = new dfa.UninitializedAnalyzer(cfg);
 			java.util.Set<String> uninitialized = analyzer.analyze();
@@ -109,12 +75,12 @@ public class Main
 			}
 
 			/**************************/
-			/* [9] Close output file */
+			/* [10] Close output file */
 			/**************************/
 			fileWriter.close();
 
 			/*************************************/
-			/* [10] Finalize AST GRAPHIZ DOT file */
+			/* [11] Finalize AST GRAPHIZ DOT file */
 			/*************************************/
 			AstGraphviz.getInstance().finalizeFile();
 		}
