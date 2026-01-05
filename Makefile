@@ -54,6 +54,9 @@ OUTPUT   = ${OUTPUT_DIR}/Output.txt
 ##########
 # TARGET #
 ##########
+
+all: compile
+
 compile:
 	clear
 	@echo "*******************************"
@@ -122,3 +125,17 @@ compile:
 	@echo "*                           *"
 	@echo "*****************************"
 	java -jar ANALYZER ${INPUT} ${OUTPUT}
+
+clean:
+	@echo "*******************************"
+	@echo "*                             *"
+	@echo "*                             *"
+	@echo "* [0] Cleaning files ...      *"
+	@echo "*                             *"
+	@echo "*                             *"
+	@echo "*******************************"
+	rm -rf ANALYZER
+	rm -rf ${JFlex_CUP_GENERATED_FILES} ${BIN_DIR}/*.class ${BIN_DIR}/*/*.class
+	@echo "\n"
+
+.PHONY: all compile clean
